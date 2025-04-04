@@ -3,7 +3,7 @@
 'use strict';
 import { Game } from '../modules/Game.class.js';
 
-let game = new Game();
+let game;
 
 const boardEl = document.querySelector('.game-field tbody');
 const scoreEl = document.querySelector('.game-score');
@@ -32,30 +32,40 @@ function renderBoard() {
         cell.classList.add(`field-cell--${game.board[r][c]}`);
         cell.textContent = game.board[r][c];
       }
+
       row.appendChild(cell);
     }
+
     boardEl.appendChild(row);
   }
+
   scoreEl.textContent = game.score;
 }
 
 function handleMove(event) {
-  event.preventDefault();
-
-  if (game.status !== 'playing') {
+  if (!game || game.status !== 'playing') {
     return;
   }
 
+  event.preventDefault();
+
   let moved = false;
 
-  if (event.key === 'ArrowLeft') {
-    moved = game.moveLeft();
-  } else if (event.key === 'ArrowRight') {
-    moved = game.moveRight();
-  } else if (event.key === 'ArrowUp') {
-    moved = game.moveUp();
-  } else if (event.key === 'ArrowDown') {
-    moved = game.moveDown();
+  switch (event.key) {
+    case 'ArrowLeft':
+      moved = game.moveLeft();
+      break;
+    case 'ArrowRight':
+      moved = game.moveRight();
+      break;
+    case 'ArrowUp':
+      moved = game.moveUp();
+      break;
+    case 'ArrowDown':
+      moved = game.moveDown();
+      break;
+    default:
+      moved = false;
   }
 
   console.log('Moved:', moved);
@@ -87,5 +97,3 @@ function restartGame() {
 
   renderBoard();
 }
-
-renderBoard();
